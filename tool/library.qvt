@@ -1,0 +1,14 @@
+
+  query haveConsistentPropertySubsetting(_subset: Property, _superset: Property) : Boolean {
+    _subset.type.conformsTo(_superset.type) and
+    un2int(_subset.upper) <= un2int(_superset.upper) and
+    ((_superset.isComposite() and _superset.isDerivedUnion) implies _subset.isComposite())
+  }
+
+  query un2int (_un : Integer) : Integer {
+    if isUnlimited(_un) then 2147483647 else _un endif
+  }
+
+  query isUnlimited(_un : Integer) : Boolean {
+    _un = -1
+  }

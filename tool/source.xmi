@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI version="2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML"
+         xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <uml:Model>
+        <packagedElement name="Class3" xmi:id="QgNRvGKFS_jKqQTi" xmi:type="uml:Interface"/>
+        <packagedElement isAbstract="false" name="Class9"
+                         xmi:id="ewgvPGKFS_jKqQTv" xmi:type="uml:Class">
+            <ownedOperation name="operation" xmi:id="zwgGvGKFS_jKqQTU" xmi:type="uml:Operation"/>
+        </packagedElement>
+        <packagedElement isAbstract="false" name="Class4"
+                         xmi:id="6z_PPGKFS_jKqQTZ" xmi:type="uml:Class"/>
+        <packagedElement name="ClassInterface" xmi:id="VCfnXGKFS_jKqQyB" xmi:type="uml:Interface"/>
+        <packagedElement isAbstract="true" name="Class2"
+                         xmi:id="H63nXGKFS_jKqQvs" xmi:type="uml:Class" />
+        <packagedElement isAbstract="false" name="Class"
+                         xmi:id="y_XnXGKFS_jKqQvj" xmi:type="uml:Class">
+            <ownedAttribute name="attribute" xmi:id="Iq.PXGKFS_jKqQTa" xmi:type="uml:Property"/>
+            <ownedAttribute name="attribute2" xmi:id="BJ.PXGKFS_jKqQTc" xmi:type="uml:Property"/>
+            <ownedAttribute name="attribute3" xmi:id="Gv.PXGKFS_jKqQTe" xmi:type="uml:Property"/>
+        </packagedElement>
+    </uml:Model>
+</xmi:XMI>
