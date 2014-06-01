@@ -1,0 +1,50 @@
+\begin{center}
+\LARGE{A Tool for Checking Correctness of Design Diagrams in UML}
+\end{center}
+
+\vspace{10pt}
+
+\noindent
+Author: Bc. Ivo Dlouhý, xdlouh05@stud.fit.vutbr.cz \\
+Faculty of Information Technology, Brno University of Technology \\
+
+\noindent\rule{16cm}{0.4pt}
+
+\vspace{7pt}
+
+\section{Visual Paradigm Plugin}
+The Visual Paradigm plugin uses the Ant build system.
+\begin{enumerate}
+  \item Navigate to the umllint-vp/src directory and start Ant
+  \item Ant compiles the plugin and creates a umllint-vp/src/plugin directory that the 
+  \item Copy the files in plugin directory into the plugins/net.umllint.plugin.vp/ directory of your Visual Paradigm
+  \item Set up a writeable temporary directory in the umlllint.properties file
+\end{enumerate}
+
+\section{Command Line Tool}
+The command line tool uses the Ant build system.
+\begin{enumerate}
+  \item Navigate to the umllint-tool/src directory and start Ant
+  \item Ant compiles the plugin and creates a umllint-tool/build/artifacts/jar that holds the umllint-tool.jar and other
+\end{enumerate}
+
+\section{Master's Thesis}
+The thesis uses a makefile system
+\begin{enumerate}
+  \item Navigate to the umllint-thesis/src and start make.
+  \item The result is in the dp-dlouhy.pdf file.
+\end{enumerate}
+
+\section{Server}
+The Server component uses the Gradle build system.
+\begin{enumerate}
+  \item Setup the connection string, user and password to the database in the local or production.properties file
+  \item Navigate to the umllint-server and call ./gradlew war to generate the WAR file
+  \item Upload WAR from the build/libs directory to the web server
+\end{enumerate}
+
+\section{Database}
+The Database drop and create scripts are located in the umllint-server/database directory.
+\begin{enumerate}
+  \item Connect to the database server and run the scripts.
+\end{enumerate}
