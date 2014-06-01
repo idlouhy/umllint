@@ -1,0 +1,6 @@
+CREATE DATABASE umlcheck WITH
+  ENCODING='UTF8'
+  OWNER=umlcheck
+  TEMPLATE=template0
+  CONNECTION LIMIT=10
+;
