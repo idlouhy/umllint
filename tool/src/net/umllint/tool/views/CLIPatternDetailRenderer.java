@@ -1,7 +1,7 @@
 package net.umllint.tool.views;
 
-import net.umllint.tool.ULContext;
-import net.umllint.tool.model.pattern.ULPattern;
+import net.umllint.common.ULContext;
+import net.umllint.common.model.pattern.ULPattern;
 
 import java.util.LinkedList;
 import java.util.List;

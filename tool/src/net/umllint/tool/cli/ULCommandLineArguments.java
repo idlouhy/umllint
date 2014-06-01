@@ -1,8 +1,16 @@
 package net.umllint.tool.cli;
 
-import net.umllint.tool.ULContext;
-import net.umllint.tool.ULToolController;
+import net.umllint.common.ULContext;
+import net.umllint.tool.UMLLintToolController;
 import org.apache.commons.cli.*;
+
+/**
+ * A Tool for Checking Correctness of Design Diagrams in UML
+ * Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz
+ * http://umllint.net
+ * Master's thesis
+ * Brno University of Technology, Faculty of Information Technology
+ */
 
 public class ULCommandLineArguments {
 
@@ -106,35 +114,35 @@ public class ULCommandLineArguments {
     options.addOption(option);
   }
 
-  public ULToolController.ULMode setUp(String[] args) throws ParseException {
+  public UMLLintToolController.ULMode setUp(String[] args) throws ParseException {
     CommandLineParser commandLineParser = new BasicParser();
 
     CommandLine commandLine = commandLineParser.parse(options, args);
 
-    ULToolController.ULMode mode = ULToolController.ULMode.HELP;
+    UMLLintToolController.ULMode mode = UMLLintToolController.ULMode.HELP;
 
     if (commandLine.hasOption("a")) {
-      mode = ULToolController.ULMode.ANALYZE;
+      mode = UMLLintToolController.ULMode.ANALYZE;
     }
 
     if (commandLine.hasOption("l")) {
-      mode = ULToolController.ULMode.LIST;
+      mode = UMLLintToolController.ULMode.LIST;
     }
 
     if (commandLine.hasOption("p")) {
-      mode = ULToolController.ULMode.PATTERN;
+      mode = UMLLintToolController.ULMode.PATTERN;
     }
 
     if (commandLine.hasOption("u")) {
-      mode = ULToolController.ULMode.UPDATE;
+      mode = UMLLintToolController.ULMode.UPDATE;
     }
 
     if (commandLine.hasOption("e")) {
-      mode = ULToolController.ULMode.ENABLE;
+      mode = UMLLintToolController.ULMode.ENABLE;
     }
 
     if (commandLine.hasOption("i")) {
-      mode = ULToolController.ULMode.IGNORE;
+      mode = UMLLintToolController.ULMode.IGNORE;
     }
 
     if (commandLine.hasOption("c")) {

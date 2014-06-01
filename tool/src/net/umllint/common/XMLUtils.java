@@ -1,9 +1,9 @@
 package net.umllint.common;
 
-import net.umllint.tool.model.pattern.ULPattern;
-import net.umllint.tool.model.pattern.ULPatternCategory;
-import net.umllint.tool.model.pattern.ULPatternReference;
-import net.umllint.tool.model.pattern.ULPatternSeverity;
+import net.umllint.common.model.pattern.ULPattern;
+import net.umllint.common.model.pattern.ULPatternCategory;
+import net.umllint.common.model.pattern.ULPatternReference;
+import net.umllint.common.model.pattern.ULPatternSeverity;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -17,8 +17,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by idlouhy on 4/2/14.
+ * UMLLint
+ * A Tool for Checking Correctness of Design Diagrams in UML
+ *
+ * Ivo Dlouhy
+ * xdlouh05@stud.fit.vutbr.cz
+ * http://umllint.net
  */
+
 public class XMLUtils {
 
 

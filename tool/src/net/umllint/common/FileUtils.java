@@ -1,10 +1,18 @@
 package net.umllint.common;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
- * Created by idlouhy on 4/3/14.
+ * UMLLint
+ * A Tool for Checking Correctness of Design Diagrams in UML
+ *
+ * Ivo Dlouhy
+ * xdlouh05@stud.fit.vutbr.cz
+ * http://umllint.net
  */
+
 public class FileUtils {
 
   public static String readFromFile(File file) throws IOException {
@@ -31,11 +39,22 @@ public class FileUtils {
 
   }
 
+  public static void simpleDownload(URL url, OutputStream outputStream) throws IOException {
 
-  public static void main(String[] args) throws IOException {
+    URLConnection urlConnection = url.openConnection();
+    InputStream inputStream = urlConnection.getInputStream();
 
+    byte[] buffer = new byte[1024];
+
+    int len;
+
+    while ((len = inputStream.read(buffer)) > 0) {
+      outputStream.write(buffer, 0, len);
+    }
+
+    inputStream.close();
+    outputStream.close();
 
   }
-
 
 }

@@ -1,4 +1,30 @@
 
+  query isInstanceValueConformingToType(_value : InstanceValue, _type : Type) : Boolean {
+      not _type.oclIsKindOf(PrimitiveType) and
+      _value.type = _type and
+      (_value.instance.oclIsKindOf(EnumerationLiteral) implies
+          (type.oclIsKindOf(Enumeration) and
+          _value.instance.oclAsType(EnumerationLiteral).enumeration = _type))
+  }
+
+  query isValueConformingToType(_value : ValueSpecification, _type : Type) : Boolean {
+      if _value.oclIsKindOf(LiteralBoolean) then _type.name = 'Boolean' else
+          if _value.oclIsKindOf(LiteralInteger) then _type.name = 'Integer' else
+              if _value.oclIsKindOf(LiteralString) then _type.name = 'String' else
+                  if _value.oclIsKindOf(LiteralUnlimitedNatural) then _type.name = 'UnlimitedNatural' else
+                      if _value.oclIsKindOf(LiteralNull) then _type.oclIsTypeOf(Class) or _type.oclIsTypeOf(DataType) else
+                          if _value.oclIsKindOf(InstanceValue) then
+                            isInstanceValueConformingToType(_value.oclAsType(InstanceValue), _type)
+                          else
+                             _value.oclIsKindOf(OpaqueExpression)
+                          endif
+                      endif
+                  endif
+              endif
+          endif
+      endif
+  }
+
   query haveConsistentPropertySubsetting(_subset: Property, _superset: Property) : Boolean {
     _subset.type.conformsTo(_superset.type) and
     un2int(_subset.upper) <= un2int(_superset.upper) and
@@ -12,3 +38,13 @@
   query isUnlimited(_un : Integer) : Boolean {
     _un = -1
   }
+
+  query haveConsistentPropertySubsetting(_subset: Property, _superset: Property) : Boolean {
+      _subset.type.conformsTo(_superset.type) and
+      un2int(_subset.upper) <= un2int(_superset.upper) and
+      ((_superset.isComposite() and _superset.isDerivedUnion) implies _subset.isComposite())
+  }
+
+
+
+

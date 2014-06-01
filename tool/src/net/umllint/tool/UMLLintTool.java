@@ -1,7 +1,10 @@
 package net.umllint.tool;
 
+import net.umllint.common.ULContext;
+import net.umllint.common.ULException;
+import net.umllint.common.ULLog;
+
 /**
- *
  * A Tool for Checking Correctness of Design Diagrams in UML
  * Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz
  * http://umllint.net
@@ -11,23 +14,30 @@ package net.umllint.tool;
 
 public class UMLLintTool {
 
+  ULContext context = ULContext.instance();
+  UMLLintToolController controller = new UMLLintToolController();
+
+
+  public void run(String[] args) throws ULException {
+    controller.handleArguments(args);
+    context.load();
+    controller.execute();
+  }
 
 
   public static void main(String[] args) throws Exception {
 
-    ULContext context = ULContext.instance();
-
-    ULToolController controller = new ULToolController();
-    controller.handleArguments(args);
+    UMLLintTool tool = new UMLLintTool();
 
     try {
-      context.load();
+      tool.run(args);
+    }
+    catch (ULException e) {
+      System.exit(1);
     }
     catch (Exception e) {
-      String message = String.format("Config file not found!");
-      System.out.print(message);
+      ULLog.getInstance().log(ULLog.LogLevel.ERROR, String.format("%s", e.getMessage()));
     }
 
-    controller.execute();
   }
 }

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="umllint-tool" default="all">
-  
-  
-  <property file="build.properties"/>
-  <!-- Uncomment the following property if no tests compilation is needed -->
-  <!-- 
-  <property name="skip.tests" value="true"/>
-   -->
-  
+<project name="tool" default="all">
+    
   <!-- Compiler options -->
   
   <property name="compiler.debug" value="on"/>
@@ -181,8 +174,8 @@
   
   <property name="compiler.args.tool" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
   
-  <property name="tool.output.dir" value="${module.tool.basedir}/out/production/tool"/>
-  <property name="tool.testoutput.dir" value="${module.tool.basedir}/out/test/tool"/>
+  <property name="tool.output.dir" value="${module.tool.basedir}/build/production/tool"/>
+  <property name="tool.testoutput.dir" value="${module.tool.basedir}/build/test/tool"/>
   
   <path id="tool.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
@@ -325,12 +318,7 @@
     <dirset dir="${module.tool.basedir}">
       <include name="src"/>
       <include name="resources"/>
-    </dirset>
-  </path>
-  
-  <path id="tool.module.test.sourcepath">
-    <dirset dir="${module.tool.basedir}">
-      <include name="test"/>
+      <include name="workspace"/>
     </dirset>
   </path>
   
@@ -356,26 +344,14 @@
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
-    </copy>
-  </target>
-  
-  <target name="compile.module.tool.tests" depends="compile.module.tool.production" description="compile module tool; test classes" unless="skip.tests">
-    <mkdir dir="${tool.testoutput.dir}"/>
-    <javac destdir="${tool.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.tool}"/>
-      <bootclasspath refid="tool.module.bootclasspath"/>
-      <classpath refid="tool.module.classpath"/>
-      <src refid="tool.module.test.sourcepath"/>
-      <patternset refid="excluded.from.compilation.tool"/>
-    </javac>
-    
-    <copy todir="${tool.testoutput.dir}">
-      <fileset dir="${module.tool.basedir}/test">
+      <fileset dir="${module.tool.basedir}/workspace">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
     </copy>
   </target>
+  
+  <target name="compile.module.tool.tests" depends="compile.module.tool.production" description="compile module tool; test classes" unless="skip.tests"/>
   
   <target name="clean.module.tool" description="cleanup module">
     <delete dir="${tool.output.dir}"/>
@@ -386,58 +362,67 @@
     <!-- Perform any build initialization in this target -->
   </target>
   
-  <target name="clean" depends="clean.module.tool, clean.artifact.umllint-tool" description="cleanup all"/>
+  <target name="clean" depends="clean.module.tool, clean.artifact.tool" description="cleanup all"/>
   
   <target name="build.modules" depends="init, clean, compile.module.tool" description="build all modules"/>
   
   <target name="init.artifacts">
     <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
-    <property name="artifact.output.umllint-tool" value="${basedir}/build"/>
+    <property name="artifact.output.tool" value="${basedir}/build"/>
     <mkdir dir="${artifacts.temp.dir}"/>
     <property name="temp.jar.path.tool.jar" value="${artifacts.temp.dir}/tool.jar"/>
   </target>
   
-  <target name="clean.artifact.umllint-tool" description="clean umllint-tool artifact output">
-    <delete dir="${artifact.output.umllint-tool}"/>
+  <target name="clean.artifact.tool" description="clean tool artifact output">
+    <delete dir="${artifact.output.tool}"/>
   </target>
   
-  <target name="artifact.umllint-tool" depends="init.artifacts, compile.module.tool" description="Build &#39;umllint-tool&#39; artifact">
-    <mkdir dir="${artifact.output.umllint-tool}"/>
+  <target name="artifact.tool" depends="init.artifacts, compile.module.tool" description="Build &#39;tool&#39; artifact">
+    <mkdir dir="${artifact.output.tool}"/>
     <jar destfile="${temp.jar.path.tool.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset dir="${tool.output.dir}"/>
     </jar>
-    <copy file="${temp.jar.path.tool.jar}" tofile="${artifact.output.umllint-tool}/tool.jar"/>
-    <mkdir dir="${artifact.output.umllint-tool}/lib"/>
-    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.core.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.debug.core.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.ui.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.debug.ui.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar"/>
-    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar" tofile="${artifact.output.umllint-tool}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar"/>
-    <copy file="${basedir}/lib/org.apache.commons.cli-1.2.jar" tofile="${artifact.output.umllint-tool}/lib/org.apache.commons.cli-1.2.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar"/>
-    <copy file="${basedir}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar" tofile="${artifact.output.umllint-tool}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar"/>
+    <copy file="${temp.jar.path.tool.jar}" tofile="${artifact.output.tool}/tool.jar"/>
+    <mkdir dir="${artifact.output.tool}/lib"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.core.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.debug.core.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.ui.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.debug.ui.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar" tofile="${artifact.output.tool}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/org.apache.commons.cli-1.2.jar" tofile="${artifact.output.tool}/lib/org.apache.commons.cli-1.2.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar" tofile="${artifact.output.tool}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar" tofile="${artifact.output.tool}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar" tofile="${artifact.output.tool}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar" tofile="${artifact.output.tool}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar" tofile="${artifact.output.tool}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar" tofile="${artifact.output.tool}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar" tofile="${artifact.output.tool}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar"/>
+    <mkdir dir="${artifact.output.tool}/resources"/>
+    <copy todir="${artifact.output.tool}/resources">
+      <fileset dir="${basedir}/resources"/>
+    </copy>
+    <copy file="${basedir}/umllint.properties" tofile="${artifact.output.tool}/umllint.properties"/>
+    <mkdir dir="${artifact.output.tool}/workspace"/>
+    <copy todir="${artifact.output.tool}/workspace">
+      <fileset dir="${basedir}/workspace"/>
+    </copy>
   </target>
   
-  <target name="build.all.artifacts" depends="artifact.umllint-tool" description="Build all artifacts">
+  <target name="build.all.artifacts" depends="artifact.tool" description="Build all artifacts">
     
     <!-- Delete temporary files -->
     <delete dir="${artifacts.temp.dir}"/>

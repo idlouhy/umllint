@@ -1,4 +1,4 @@
-package net.umllint.tool.cli;
+package net.umllint.common;
 
 /**
  * A Tool for Checking Correctness of Design Diagrams in UML
@@ -8,6 +8,6 @@ package net.umllint.tool.cli;
  * Brno University of Technology, Faculty of Information Technology
  */
 
-public interface IPercentUpdateListener {
-    void setPercent(Float percent);
+public class ULException extends Exception {
+
 }
