@@ -1,0 +1,201 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+
+
+body {
+  font-family: MyriadPro-Regular, 'Myriad Pro Regular', MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif;
+}
+
+
+h1 {
+  font-size: 150%;
+  padding: 10px;
+
+}
+
+h2 {
+  padding-top: 10px;
+  padding-bottom: 5px;
+
+}
+
+p {
+  padding: 10px;
+}
+
+p * {
+  font-size: 95%;
+}
+
+a {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+.code-qvt {
+  font-family: "Consolas", "Courier New", Courier, Monospace;
+  white-space: pre;
+}
+
+table.list-item-view td {
+  border-style: none;
+}
+
+textarea {
+  height: 25em;
+  width: 80em;
+}
+
+/* table */
+
+table {
+  padding: 15px;
+}
+
+
+table td,th {
+  border-width: 1px;
+  border-style: solid;
+}
+
+
+table th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  text-align: left;
+
+}
+
+
+table td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+table th {
+  font-weight: bold;
+}
+
+.list-cell-actions {
+  border-style: none;
+}
+
+.list-cell-actions a {
+  font-size: 80%;
+  text-decoration: none;
+  color: gray;
+}
+
+.list-cell-actions a:hover {
+  color: black;
+}
+
+
+
+/* menu */
+
+#menu {
+  padding: 10px;
+  background-color: black;
+}
+
+#menu a {
+  padding: 5px;
+  text-decoration: none;
+  color: gray;
+}
+
+#menu a:hover {
+  color: white;
+}
+
+/* content */
+#content {
+  padding: 15px;
+}
+
+#footer {
+  font-size: 80%;
+  color: gray;
+
+}
+
+span.umllint-icon img {
+  width: 22px;
+  height: 22px;
+  margin: 3px;
+}
+
+ul li {
+  vertical-align: middle;
+  padding: 2px;
+}
+
+ul {
+  list-style: none;
+
+}
+
+
+
+ul li span {
+  height: 22px;
+  line-height: 22px;
+}
+
+ul li span img {
+  vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* df */
+#df-copyright {
+  font-size: 75%;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+
+/* umllint */
+
+
+.umllint-pattern-description img {
+  width: 480px;
+
+}
+
+
+
+
+
+
+

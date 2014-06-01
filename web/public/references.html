@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>UMLLint</title>
+
+  <meta name="description" content="A Tool for Checking Correctness of Design Diagrams in UML"/>
+  <meta name="keywords" content="uml, xmi, umllint, lint, qvt, patterns"/>
+  <meta name="author" content="Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz"/>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/vendor/reset.css"/>
+  <link rel="stylesheet" href="css/layout.css"/>
+
+</head>
+<body>
+
+
+<h1>UMLLint</h1>
+
+<div id="header">
+  <div id="menu">
+    <a href="index.html">Home</a>
+    <a href="get.html">GET</a>
+    <a href="app/pattern/list">Patterns</a>
+    <a href="app/api/xml/patterns.xml">Export</a>
+    <a href="references.html">References</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<div id="content">
+
+<script type="text/javascript">
+<!--
+// QuickSearch script for JabRef HTML export
+// Version: 3.0
+//
+// Copyright (c) 2006-2011, Mark Schenk
+//
+// This software is distributed under a Creative Commons Attribution 3.0 License
+// http://creativecommons.org/licenses/by/3.0/
+//
+// Features:
+// - intuitive find-as-you-type searching
+//    ~ case insensitive
+//    ~ ignore diacritics (optional)
+//
+// - search with/without Regular Expressions
+// - match BibTeX key
+//
+
+// Search settings
+var searchAbstract = true;	// search in abstract
+var searchReview = true;	// search in review
+
+var noSquiggles = true; 	// ignore diacritics when searching
+var searchRegExp = false; 	// enable RegExp searches
+
+
+if (window.addEventListener) {
+  window.addEventListener("load",initSearch,false); }
+else if (window.attachEvent) {
+  window.attachEvent("onload", initSearch); }
+
+function initSearch() {
+  // check for quick search table and searchfield
+  if (!document.getElementById('qs_table')||!document.getElementById('quicksearch')) { return; }
+
+  // load all the rows and sort into arrays
+  loadTableData();
+
+  //find the query field
+  qsfield = document.getElementById('qs_field');
+
+  // previous search term; used for speed optimisation
+  prevSearch = '';
+
+  //find statistics location
+  stats = document.getElementById('stat');
+  setStatistics(-1);
+
+  // set up preferences
+  initPreferences();
+
+  // shows the searchfield
+  document.getElementById('quicksearch').style.display = 'block';
+  document.getElementById('qs_field').onkeyup = quickSearch;
+}
+
+function loadTableData() {
+  // find table and appropriate rows
+  searchTable = document.getElementById('qs_table');
+  var allRows = searchTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+  // split all rows into entryRows and infoRows (e.g. abstract, review, bibtex)
+  entryRows = new Array(); infoRows = new Array(); absRows = new Array(); revRows = new Array();
+
+  // get data from each row
+  entryRowsData = new Array(); absRowsData = new Array(); revRowsData = new Array();
+
+  BibTeXKeys = new Array();
+
+  for (var i=0, k=0, j=0; i<allRows.length;i++) {
+    if (allRows[i].className.match(/entry/)) {
+      entryRows[j] = allRows[i];
+      entryRowsData[j] = stripDiacritics(getTextContent(allRows[i]));
+      allRows[i].id ? BibTeXKeys[j] = allRows[i].id : allRows[i].id = 'autokey_'+j;
+      j ++;
+    } else {
+      infoRows[k++] = allRows[i];
+      // check for abstract/review
+      if (allRows[i].className.match(/abstract/)) {
+        absRows.push(allRows[i]);
+        absRowsData[j-1] = stripDiacritics(getTextContent(allRows[i]));
+      } else if (allRows[i].className.match(/review/)) {
+        revRows.push(allRows[i]);
+        revRowsData[j-1] = stripDiacritics(getTextContent(allRows[i]));
+      }
+    }
+  }
+  //number of entries and rows
+  numEntries = entryRows.length;
+  numInfo = infoRows.length;
+  numAbs = absRows.length;
+  numRev = revRows.length;
+}
+
+function quickSearch(){
+
+  tInput = qsfield;
+
+  if (tInput.value.length == 0) {
+    showAll();
+    setStatistics(-1);
+    qsfield.className = '';
+    return;
+  } else {
+    t = stripDiacritics(tInput.value);
+
+    if(!searchRegExp) { t = escapeRegExp(t); }
+
+    // only search for valid RegExp
+    try {
+      textRegExp = new RegExp(t,"i");
+      closeAllInfo();
+      qsfield.className = '';
+    }
+    catch(err) {
+      prevSearch = tInput.value;
+      qsfield.className = 'invalidsearch';
+      return;
+    }
+  }
+
+  // count number of hits
+  var hits = 0;
+
+  // start looping through all entry rows
+  for (var i = 0; cRow = entryRows[i]; i++){
+
+    // only show search the cells if it isn't already hidden OR if the search term is getting shorter, then search all
+    if(cRow.className.indexOf('noshow')==-1 || tInput.value.length <= prevSearch.length){
+      var found = false;
+
+      if (entryRowsData[i].search(textRegExp) != -1 || BibTeXKeys[i].search(textRegExp) != -1){
+        found = true;
+      } else {
+        if(searchAbstract && absRowsData[i]!=undefined) {
+          if (absRowsData[i].search(textRegExp) != -1){ found=true; }
+        }
+        if(searchReview && revRowsData[i]!=undefined) {
+          if (revRowsData[i].search(textRegExp) != -1){ found=true; }
+        }
+      }
+
+      if (found){
+        cRow.className = 'entry show';
+        hits++;
+      } else {
+        cRow.className = 'entry noshow';
+      }
+    }
+  }
+
+  // update statistics
+  setStatistics(hits)
+
+  // set previous search value
+  prevSearch = tInput.value;
+}
+
+
+// Strip Diacritics from text
+// http://stackoverflow.com/questions/990904/javascript-remove-accents-in-strings
+
+// String containing replacement characters for stripping accents
+var stripstring =
+    'AAAAAAACEEEEIIII'+
+    'DNOOOOO.OUUUUY..'+
+    'aaaaaaaceeeeiiii'+
+    'dnooooo.ouuuuy.y'+
+    'AaAaAaCcCcCcCcDd'+
+    'DdEeEeEeEeEeGgGg'+
+    'GgGgHhHhIiIiIiIi'+
+    'IiIiJjKkkLlLlLlL'+
+    'lJlNnNnNnnNnOoOo'+
+    'OoOoRrRrRrSsSsSs'+
+    'SsTtTtTtUuUuUuUu'+
+    'UuUuWwYyYZzZzZz.';
+
+function stripDiacritics(str){
+
+  if(noSquiggles==false){
+    return str;
+  }
+
+  var answer='';
+  for(var i=0;i<str.length;i++){
+    var ch=str[i];
+    var chindex=ch.charCodeAt(0)-192;   // Index of character code in the strip string
+    if(chindex>=0 && chindex<stripstring.length){
+      // Character is within our table, so we can strip the accent...
+      var outch=stripstring.charAt(chindex);
+      // ...unless it was shown as a '.'
+      if(outch!='.')ch=outch;
+    }
+    answer+=ch;
+  }
+  return answer;
+}
+
+// http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+// NOTE: must escape every \ in the export code because of the JabRef Export...
+function escapeRegExp(str) {
+  return str.replace(/[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+function toggleInfo(articleid,info) {
+
+  var entry = document.getElementById(articleid);
+  var abs = document.getElementById('abs_'+articleid);
+  var rev = document.getElementById('rev_'+articleid);
+  var bib = document.getElementById('bib_'+articleid);
+
+  if (abs && info == 'abstract') {
+    abs.className.indexOf('noshow') == -1?abs.className = 'abstract noshow':abs.className = 'abstract show';
+  } else if (rev && info == 'review') {
+    rev.className.indexOf('noshow') == -1?rev.className = 'review noshow':rev.className = 'review show';
+  } else if (bib && info == 'bibtex') {
+    bib.className.indexOf('noshow') == -1?bib.className = 'bibtex noshow':bib.className = 'bibtex show';
+  } else {
+    return;
+  }
+
+  // check if one or the other is available
+  var revshow; var absshow; var bibshow;
+  (abs && abs.className.indexOf('noshow') == -1)? absshow = true: absshow = false;
+  (rev && rev.className.indexOf('noshow') == -1)? revshow = true: revshow = false;
+  (bib && bib.className.indexOf('noshow') == -1)? bibshow = true: bibshow = false;
+
+  // highlight original entry
+  if(entry) {
+    if (revshow || absshow || bibshow) {
+      entry.className = 'entry highlight show';
+    } else {
+      entry.className = 'entry show';
+    }
+  }
+
+  // When there's a combination of abstract/review/bibtex showing, need to add class for correct styling
+  if(absshow) {
+    (revshow||bibshow)?abs.className = 'abstract nextshow':abs.className = 'abstract';
+  }
+  if (revshow) {
+    bibshow?rev.className = 'review nextshow': rev.className = 'review';
+  }
+
+}
+
+function setStatistics (hits) {
+  if(hits < 0) { hits=numEntries; }
+  if(stats) { stats.firstChild.data = hits + '/' + numEntries}
+}
+
+function getTextContent(node) {
+  // Function written by Arve Bersvendsen
+  // http://www.virtuelvis.com
+
+  if (node.nodeType == 3) {
+    return node.nodeValue;
+  } // text node
+  if (node.nodeType == 1 && node.className != "infolinks") { // element node
+    var text = [];
+    for (var chld = node.firstChild;chld;chld=chld.nextSibling) {
+      text.push(getTextContent(chld));
+    }
+    return text.join("");
+  } return ""; // some other node, won't contain text nodes.
+}
+
+function showAll(){
+  closeAllInfo();
+  for (var i = 0; i < numEntries; i++){ entryRows[i].className = 'entry show'; }
+}
+
+function closeAllInfo(){
+  for (var i=0; i < numInfo; i++){
+    if (infoRows[i].className.indexOf('noshow') ==-1) {
+      infoRows[i].className = infoRows[i].className + ' noshow';
+    }
+  }
+}
+
+function clearQS() {
+  qsfield.value = '';
+  showAll();
+}
+
+function redoQS(){
+  showAll();
+  quickSearch(qsfield);
+}
+
+function updateSetting(obj){
+  var option = obj.id;
+  var checked = obj.value;
+
+  switch(option)
+  {
+    case "opt_searchAbs":
+      searchAbstract=!searchAbstract;
+      redoQS();
+      break;
+    case "opt_searchRev":
+      searchReview=!searchReview;
+      redoQS();
+      break;
+    case "opt_useRegExp":
+      searchRegExp=!searchRegExp;
+      redoQS();
+      break;
+    case "opt_noAccents":
+      noSquiggles=!noSquiggles;
+      loadTableData();
+      redoQS();
+      break;
+  }
+}
+
+function initPreferences(){
+  if(searchAbstract){document.getElementById("opt_searchAbs").checked = true;}
+  if(searchReview){document.getElementById("opt_searchRev").checked = true;}
+  if(noSquiggles){document.getElementById("opt_noAccents").checked = true;}
+  if(searchRegExp){document.getElementById("opt_useRegExp").checked = true;}
+
+  if(numAbs==0) {document.getElementById("opt_searchAbs").parentNode.style.display = 'none';}
+  if(numRev==0) {document.getElementById("opt_searchRev").parentNode.style.display = 'none';}
+}
+
+function toggleSettings(){
+  var togglebutton = document.getElementById('showsettings');
+  var settings = document.getElementById('settings');
+
+  if(settings.className == "hidden"){
+    settings.className = "show";
+    togglebutton.innerText = "close settings";
+    togglebutton.textContent = "close settings";
+  }else{
+    settings.className = "hidden";
+    togglebutton.innerText = "settings...";
+    togglebutton.textContent = "settings...";
+  }
+}
+
+-->
+</script>
+<style type="text/css">
+  form#quicksearch { width: auto; border-style: solid; border-color: gray; border-width: 1px 0px; padding: 0.7em 0.5em; display:none; position:relative; }
+  span#searchstat {padding-left: 1em;}
+
+  div#settings { margin-top:0.7em; /* border-bottom: 1px transparent solid; background-color: #efefef; border: 1px grey solid; */ }
+  div#settings ul {margin: 0; padding: 0; }
+  div#settings li {margin: 0; padding: 0 1em 0 0; display: inline; list-style: none; }
+  div#settings li + li { border-left: 2px #efefef solid; padding-left: 0.5em;}
+  div#settings input { margin-bottom: 0px;}
+
+  div#settings.hidden {display:none;}
+
+  #showsettings { border: 1px grey solid; padding: 0 0.5em; float:right; line-height: 1.6em; text-align: right; }
+  #showsettings:hover { cursor: pointer; }
+
+  .invalidsearch { background-color: red; }
+  input[type="button"] { background-color: #efefef; border: 1px #2E2E2E solid;}
+
+  table { border: 1px gray none; width: 100%; empty-cells: show; border-spacing: 0em 0.1em; margin: 1em 0em; }
+  th, td { border: none; padding: 0.5em; vertical-align: top; text-align: justify; }
+
+  td a { color: navy; text-decoration: none; }
+  td a:hover  { text-decoration: underline; }
+
+  tr.noshow { display: none;}
+  tr.highlight td { background-color: #EFEFEF; border-top: 2px #2E2E2E solid; font-weight: bold; }
+  tr.abstract td, tr.review td, tr.bibtex td { background-color: #EFEFEF; text-align: justify; border-bottom: 2px #2E2E2E solid; }
+  tr.nextshow td { border-bottom-style: none; }
+
+  tr.bibtex pre { width: 100%; overflow: auto; white-space: pre-wrap;}
+  p.infolinks { margin: 0.3em 0em 0em 0em; padding: 0px; }
+
+  @media print {
+    p.infolinks, #qs_settings, #quicksearch, t.bibtex { display: none !important; }
+    tr { page-break-inside: avoid; }
+  }
+</style>
+
+</form>
+<table id="qs_table" border="1">
+<tbody>
+<tr id="eclipse_getting-started-with-eclipse-juno" class="entry">
+  <td>Araujo RF, Durelli VHS and Teixeira RM (2013), <i>"Getting Started with Eclipse Juno"</i>  Packt Publishing.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('eclipse_getting-started-with-eclipse-juno','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_eclipse_getting-started-with-eclipse-juno" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{eclipse_getting-started-with-eclipse-juno,
+  author = {Rodrigo F. Araujo and Vinicius H. S. Durelli and Rafael M. Teixeira},
+  title = {Getting Started with Eclipse Juno},
+  publisher = {Packt Publishing},
+  year = {2013}
+}
+</pre></td>
+</tr>
+<tr id="modeling_modeling-practices-in-open-source-software" class="entry">
+  <td>Badreddin O, Lethbridge T and Elaasar M (2013), <i>"Modeling Practices in Open Source Software"</i>, In Open Source Software: Quality Verification.  Vol. 404, pp. 127-139. Springer Berlin Heidelberg.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('modeling_modeling-practices-in-open-source-software','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-38928-3_9" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-38928-3_9" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_modeling_modeling-practices-in-open-source-software" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@incollection{modeling_modeling-practices-in-open-source-software,
+  author = {Omar Badreddin and Timothy Lethbridge and Maged Elaasar},
+  editor = {Etiel Petrinja and Giancarlo Succi and Nabil Ioini Alberto Sillitti},
+  title = {Modeling Practices in Open Source Software},
+  booktitle = {Open Source Software: Quality Verification},
+  publisher = {Springer Berlin Heidelberg},
+  year = {2013},
+  volume = {404},
+  pages = {127-139},
+  url = {http://dx.doi.org/10.1007/978-3-642-38928-3_9},
+  doi = {10.1007/978-3-642-38928-3_9}
+}
+</pre></td>
+</tr>
+<tr id="correctness-finite-satisfyability-of-uml-class-diagrams-with-constrained-class-hierarchy" class="entry">
+  <td>Balaban M and Maraee A (), <i>"Finite Satisfiability of UML Class Diagrams with Constrained Class Hierarchy"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness-finite-satisfyability-of-uml-class-diagrams-with-constrained-class-hierarchy','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness-finite-satisfyability-of-uml-class-diagrams-with-constrained-class-hierarchy" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness-finite-satisfyability-of-uml-class-diagrams-with-constrained-class-hierarchy,
+  author = {Mira Balaban and Azzam Maraee},
+  title = {Finite Satisfiability of UML Class Diagrams with Constrained Class Hierarchy}
+}
+</pre></td>
+</tr>
+<tr id="correctness_the-pattern-class-diagram-language" class="entry">
+  <td>Balaban M and Maraee A (2013), <i>"The Pattern-Class-Diagram (PCD) Language"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_the-pattern-class-diagram-language','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_the-pattern-class-diagram-language" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_the-pattern-class-diagram-language,
+  author = {Mira Balaban and Azzam Maraee},
+  title = {The Pattern-Class-Diagram (PCD) Language},
+  year = {2013}
+}
+</pre></td>
+</tr>
+<tr id="correctness_management-of-correctness-problems-in-uml-class-diagrams-towards-a-pattern-based-approach" class="entry">
+  <td>Balaban M, Maraee A and Sturm A (2010), <i>"Management of Correctness Problems in UML Class Diagrams - Towards a Pattern-Based Approach"</i>, International Journal of Information System Modeling and Design.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_management-of-correctness-problems-in-uml-class-diagrams-towards-a-pattern-based-approach','bibtex')">BibTeX</a>] [<a href="http://www.cs.bgu.ac.il/~mira/incorrectness-patterns.pdf" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_management-of-correctness-problems-in-uml-class-diagrams-towards-a-pattern-based-approach" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_management-of-correctness-problems-in-uml-class-diagrams-towards-a-pattern-based-approach,
+  author = {Mira Balaban and Azzam Maraee and Arnon Sturm},
+  title = {Management of Correctness Problems in UML Class Diagrams - Towards a Pattern-Based Approach},
+  journal = {International Journal of Information System Modeling and Design},
+  year = {2010},
+  url = {http://www.cs.bgu.ac.il/~mira/incorrectness-patterns.pdf}
+}
+</pre></td>
+</tr>
+<tr id="correctness_a-pattern-based-approach-for-improving-model-quality" class="entry">
+  <td>Balaban M, Maraee A, Sturm A and Jelnov P (2014), <i>"A Pattern-based Approach for Improving Model Quality"</i>, Software &amp; Systems Modeling. , pp. 1-29. Springer Berlin Heidelberg.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_a-pattern-based-approach-for-improving-model-quality','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/s10270-013-0390-0" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/s10270-013-0390-0" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_a-pattern-based-approach-for-improving-model-quality" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_a-pattern-based-approach-for-improving-model-quality,
+  author = {Mira Balaban and Azzam Maraee and Arnon Sturm and Pavel Jelnov},
+  title = {A Pattern-based Approach for Improving Model Quality},
+  journal = {Software &amp; Systems Modeling},
+  publisher = {Springer Berlin Heidelberg},
+  year = {2014},
+  pages = {1-29},
+  url = {http://dx.doi.org/10.1007/s10270-013-0390-0},
+  doi = {10.1007/s10270-013-0390-0}
+}
+</pre></td>
+</tr>
+<tr id="correctness_site" class="entry">
+  <td>BGU Modeling Group (2014), <i>"Patterns, Anti-Patterns and Inference Rules Catalog for UML Class Diagrams"</i>, \url{http://www.cs.bgu.ac.il/~cd-patterns/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_site','bibtex')">BibTeX</a>] [<a href="http://www.cs.bgu.ac.il/~cd-patterns/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_site" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{correctness_site,
+  author = {BGU Modeling Group},
+  title = {Patterns, Anti-Patterns and Inference Rules Catalog for UML Class Diagrams},
+  howpublished = {\url{http://www.cs.bgu.ac.il/~cd-patterns/}},
+  year = {2014},
+  note = {(accessed October 25, 2013)},
+  url = {http://www.cs.bgu.ac.il/~cd-patterns/}
+}
+</pre></td>
+</tr>
+<tr id="correctness_examples-of-redundancy-and-incompleteness" class="entry">
+  <td>BGU Modeling Group (2013), <i>"Examples of Redundancy and Incompleteness Problems"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_examples-of-redundancy-and-incompleteness','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_examples-of-redundancy-and-incompleteness" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_examples-of-redundancy-and-incompleteness,
+  author = {BGU Modeling Group},
+  title = {Examples of Redundancy and Incompleteness Problems},
+  year = {2013}
+}
+</pre></td>
+</tr>
+<tr id="modeling_model-drive-software-engineering-in-practice" class="entry">
+  <td>Brambilla M, Cabot J and Wimmer M (2012), <i>"Model-driven Software Engineering in Practice"</i>  Morgan &amp; Claypool.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('modeling_model-drive-software-engineering-in-practice','bibtex')">BibTeX</a>] [<a href="http://books.google.cz/books?id=2tVu-wC4XkAC" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_modeling_model-drive-software-engineering-in-practice" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{modeling_model-drive-software-engineering-in-practice,
+  author = {Marco Brambilla and Jordi Cabot and Manuel Wimmer},
+  title = {Model-driven Software Engineering in Practice},
+  publisher = {Morgan &amp; Claypool},
+  year = {2012},
+  url = {http://books.google.cz/books?id=2tVu-wC4XkAC}
+}
+</pre></td>
+</tr>
+<tr id="eeict" class="entry">
+  <td>Dlouhý I (2014), <i>"A Tool For Checking Correctness of Design Diagrams"</i>, In Proceedings of the 20th Conference STUDENT EEICT 2014 Volume 2.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('eeict','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_eeict" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@inproceedings{eeict,
+  author = {Ivo Dlouhý},
+  title = {A Tool For Checking Correctness of Design Diagrams},
+  booktitle = {Proceedings of the 20th Conference STUDENT EEICT 2014 Volume 2},
+  year = {2014}
+}
+</pre></td>
+</tr>
+<tr id="technologies_postgresql_a-comprehensive-guide" class="entry">
+  <td>Douglas K and Douglas S (2003), <i>"PostgreSQL: A Comprehensive Guide to Building, Programming, and Administering PostgresSQL Databases"</i>  SAMS publishing.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('technologies_postgresql_a-comprehensive-guide','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_technologies_postgresql_a-comprehensive-guide" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{technologies_postgresql_a-comprehensive-guide,
+  author = {Korry Douglas and Susan Douglas},
+  title = {PostgreSQL: A Comprehensive Guide to Building, Programming, and Administering PostgresSQL Databases},
+  publisher = {SAMS publishing},
+  year = {2003}
+}
+</pre></td>
+</tr>
+<tr id="mediniqvt_how-to-run-transformation" class="entry">
+  <td>Eichler H (2007), <i>"How to run transformation from my Java application?"</i>, \url{http://projects.ikv.de/qvt/wiki/integration}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('mediniqvt_how-to-run-transformation','bibtex')">BibTeX</a>] [<a href="http://projects.ikv.de/qvt/wiki/integration" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_mediniqvt_how-to-run-transformation" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{mediniqvt_how-to-run-transformation,
+  author = {Hajo Eichler},
+  title = {How to run transformation from my Java application?},
+  howpublished = {\url{http://projects.ikv.de/qvt/wiki/integration}},
+  year = {2007},
+  note = {(accessed February 12, 2014)},
+  url = {http://projects.ikv.de/qvt/wiki/integration}
+}
+</pre></td>
+</tr>
+<tr id="patterns_approach-to-design-pattern-and-anti-pattern-detection-in-mof-based-modeling-languages" class="entry">
+  <td>Elaasar M (2012), <i>"An Approach to Design Pattern and Anti-pattern Detection in MOF<br>-based Modeling Languages"</i> Ottawa, Ont., Canada, Canada  Carleton University.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_approach-to-design-pattern-and-anti-pattern-detection-in-mof-based-modeling-languages','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_approach-to-design-pattern-and-anti-pattern-detection-in-mof-based-modeling-languages" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@phdthesis{patterns_approach-to-design-pattern-and-anti-pattern-detection-in-mof-based-modeling-languages,
+  author = {Maged Elaasar},
+  title = {An Approach to Design Pattern and Anti-pattern Detection in MOF<br>-based Modeling Languages},
+  publisher = {Carleton University},
+  year = {2012},
+  note = {AAINR93678}
+}
+</pre></td>
+</tr>
+<tr id="patterns_vpml-an-approach-to-detect-design-patterns-of-mof-based-modeling-languages" class="entry">
+  <td>Elaasar M, Briand L and Labiche Y (2013), <i>"VPML: An Approach to Detect Design Patterns of MOF-based Modeling Languages"</i>, Software &amp; Systems Modeling. , pp. 1-30. Springer-Verlag.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_vpml-an-approach-to-detect-design-patterns-of-mof-based-modeling-languages','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/s10270-013-0325-9" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/s10270-013-0325-9" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_vpml-an-approach-to-detect-design-patterns-of-mof-based-modeling-languages" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{patterns_vpml-an-approach-to-detect-design-patterns-of-mof-based-modeling-languages,
+  author = {Maged Elaasar and Lionel Briand and Yvan Labiche},
+  title = {VPML: An Approach to Detect Design Patterns of MOF-based Modeling Languages},
+  journal = {Software &amp; Systems Modeling},
+  publisher = {Springer-Verlag},
+  year = {2013},
+  pages = {1-30},
+  url = {http://dx.doi.org/10.1007/s10270-013-0325-9},
+  doi = {10.1007/s10270-013-0325-9}
+}
+</pre></td>
+</tr>
+<tr id="patterns_a-metamodeling-approach-to-pattern-specification" class="entry">
+  <td>Elaasar M, Briand L and Labiche Y (2006), <i>"A Metamodeling Approach to Pattern Specification"</i>, In Model Driven Engineering Languages and Systems.  Vol. 4199, pp. 484-498. Springer Berlin Heidelberg.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_a-metamodeling-approach-to-pattern-specification','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/11880240_34" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/11880240_34" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_a-metamodeling-approach-to-pattern-specification" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@incollection{patterns_a-metamodeling-approach-to-pattern-specification,
+  author = {Maged Elaasar and Lionel Briand and Yvan Labiche},
+  title = {A Metamodeling Approach to Pattern Specification},
+  booktitle = {Model Driven Engineering Languages and Systems},
+  publisher = {Springer Berlin Heidelberg},
+  year = {2006},
+  volume = {4199},
+  pages = {484-498},
+  url = {http://dx.doi.org/10.1007/11880240_34},
+  doi = {10.1007/11880240_34}
+}
+</pre></td>
+</tr>
+<tr id="patterns_domain-specific-model-verification-with-qvt" class="entry">
+  <td>Elaasar M, Lionel B and Labiche Y (2011), <i>"Domain-Specific Model Verification with QVT"</i>, In Modelling Foundations and Applications.  Vol. 6698, pp. 282-298. Springer.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_domain-specific-model-verification-with-qvt','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-21470-7_20" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-21470-7_20" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_domain-specific-model-verification-with-qvt" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@incollection{patterns_domain-specific-model-verification-with-qvt,
+  author = {Maged Elaasar and Briand Lionel and Yvan Labiche},
+  editor = {Robert France and Jochen Kuester and Behzad Bordbar and Richard Paige},
+  title = {Domain-Specific Model Verification with QVT},
+  booktitle = {Modelling Foundations and Applications},
+  publisher = {Springer},
+  year = {2011},
+  volume = {6698},
+  pages = {282-298},
+  url = {http://dx.doi.org/10.1007/978-3-642-21470-7_20},
+  doi = {10.1007/978-3-642-21470-7_20}
+}
+</pre></td>
+</tr>
+<tr id="patterns_specification-and-detection-of-modeling-patterns-an-approach-based-on-qvt" class="entry">
+  <td>Elaasar M, Lionel B and Labiche Y (2010), <i>"Specification and Detection of Modeling Patterns: an Approach based on QVT"</i>, In Modelling Foundations and Applications.  Vol. 6698, pp. 282-298. Springer Specification and Detection of Modeling Patterns: an Approach based on QVT Maged Elaasar, Lionel C. Briand, and Yvan Labiche Technical Report SCE-10-02, Carleton University, April 2010.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_specification-and-detection-of-modeling-patterns-an-approach-based-on-qvt','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-21470-7_20" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/978-3-642-21470-7_20" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_specification-and-detection-of-modeling-patterns-an-approach-based-on-qvt" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@techreport{patterns_specification-and-detection-of-modeling-patterns-an-approach-based-on-qvt,
+  author = {Maged Elaasar and Briand Lionel and Yvan Labiche},
+  editor = {France, RobertB. and Kuester, JochenM. and Bordbar, Behzad and Paige, RichardF.},
+  title = {Specification and Detection of Modeling Patterns: an Approach based on QVT},
+  booktitle = {Modelling Foundations and Applications},
+  publisher = {Springer Specification and Detection of Modeling Patterns: an Approach based on QVT Maged Elaasar, Lionel C. Briand, and Yvan Labiche Technical Report SCE-10-02, Carleton University, April 2010},
+  year = {2010},
+  volume = {6698},
+  pages = {282-298},
+  url = {http://dx.doi.org/10.1007/978-3-642-21470-7_20},
+  doi = {10.1007/978-3-642-21470-7_20}
+}
+</pre></td>
+</tr>
+<tr id="patterns_metamodeling-anti-patterns" class="entry">
+  <td>Elaasar M, Lionel B and Labiche Y (2010), <i>"Metamodeling Anti-Patterns"</i>.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('patterns_metamodeling-anti-patterns','bibtex')">BibTeX</a>] [<a href="https://sites.google.com/site/metamodelingantipatterns" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_patterns_metamodeling-anti-patterns" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{patterns_metamodeling-anti-patterns,
+  author = {Maged Elaasar and Briand Lionel and Yvan Labiche},
+  title = {Metamodeling Anti-Patterns},
+  year = {2010},
+  note = {(accessed October 12, 2013)},
+  url = {https://sites.google.com/site/metamodelingantipatterns}
+}
+</pre></td>
+</tr>
+<tr id="uml_uml-distiled" class="entry">
+  <td>Fowler M (2004), <i>"UML Distilled"</i>  Addison-Wesley.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_uml-distiled','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_uml-distiled" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{uml_uml-distiled,
+  author = {Martin Fowler},
+  title = {UML Distilled},
+  publisher = {Addison-Wesley},
+  year = {2004},
+  edition = {Third}
+}
+</pre></td>
+</tr>
+<tr id="xmi_mastering-xmi" class="entry">
+  <td>Grose T, Doney G and Brodsky S (2002), <i>"Mastering XMI: Java Programming with XMI, XML, and UML"</i>, April, 2002.  Wiley.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('xmi_mastering-xmi','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/ISBN: 0-471-38429-1" target="_blank">DOI</a>]</p>
+  </td>
+</tr>
+<tr id="bib_xmi_mastering-xmi" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{xmi_mastering-xmi,
+  author = {Timothy Grose and Gary Doney and Stephen Brodsky},
+  title = {Mastering XMI: Java Programming with XMI, XML, and UML},
+  publisher = {Wiley},
+  year = {2002},
+  doi = {ISBN: 0-471-38429-1}
+}
+</pre></td>
+</tr>
+<tr id="mediniqvt_tutorial" class="entry">
+  <td>Heerink L (), <i>"Medini QVT Relations Tutorial"</i>, \url{http://projects.ikv.de/qvt/wiki/tutorial}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('mediniqvt_tutorial','bibtex')">BibTeX</a>] [<a href="http://projects.ikv.de/qvt/wiki/tutorial" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_mediniqvt_tutorial" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{mediniqvt_tutorial,
+  author = {Lex Heerink},
+  title = {Medini QVT Relations Tutorial},
+  howpublished = {\url{http://projects.ikv.de/qvt/wiki/tutorial}},
+  note = {(accessed February 15, 2014)},
+  url = {http://projects.ikv.de/qvt/wiki/tutorial}
+}
+</pre></td>
+</tr>
+<tr id="uml_towards-interoperability-of-uml-tools-for-exchanging-high-fidelity-diagrams" class="entry">
+  <td>Huang S, Gohel V and Hsu S (2007), <i>"Towards Interoperability of UML Tools for Exchanging High-fidelity Diagrams"</i>, In Proceedings of the 25th Annual ACM International Conference on Design of Communication. New York, NY, USA , pp. 134-141. ACM.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_towards-interoperability-of-uml-tools-for-exchanging-high-fidelity-diagrams','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1145/1297144.1297172" target="_blank">DOI</a>] [<a href="http://doi.acm.org/10.1145/1297144.1297172" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_towards-interoperability-of-uml-tools-for-exchanging-high-fidelity-diagrams" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@inproceedings{uml_towards-interoperability-of-uml-tools-for-exchanging-high-fidelity-diagrams,
+  author = {Shihong Huang and Vaishali Gohel and Sam Hsu},
+  title = {Towards Interoperability of UML Tools for Exchanging High-fidelity Diagrams},
+  booktitle = {Proceedings of the 25th Annual ACM International Conference on Design of Communication},
+  publisher = {ACM},
+  year = {2007},
+  pages = {134--141},
+  url = {http://doi.acm.org/10.1145/1297144.1297172},
+  doi = {10.1145/1297144.1297172}
+}
+</pre></td>
+</tr>
+<tr id="mediniqvt_site" class="entry">
+  <td>IKV++ Technologies (2012), <i>"Medini QVT"</i>, \url{http://projects.ikv.de/qvt}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('mediniqvt_site','bibtex')">BibTeX</a>] [<a href="http://projects.ikv.de/qvt" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_mediniqvt_site" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{mediniqvt_site,
+  author = {IKV++ Technologies},
+  title = {Medini QVT},
+  howpublished = {\url{http://projects.ikv.de/qvt}},
+  year = {2012},
+  note = {(accessed February 10, 2014)},
+  url = {http://projects.ikv.de/qvt}
+}
+</pre></td>
+</tr>
+<tr id="mediniqvt_workshop" class="entry">
+  <td>Kiegeland J and Eichler H (2007), <i>"Medini QVT Workshop"</i>, \url{http://projects.ikv.de/qvt}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('mediniqvt_workshop','bibtex')">BibTeX</a>] [<a href="http://projects.ikv.de/qvt" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_mediniqvt_workshop" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{mediniqvt_workshop,
+  author = {Jörg Kiegeland and Hajo Eichler},
+  title = {Medini QVT Workshop},
+  howpublished = {\url{http://projects.ikv.de/qvt}},
+  year = {2007},
+  note = {(accessed February 12, 2014)},
+  url = {http://projects.ikv.de/qvt}
+}
+</pre></td>
+</tr>
+<tr id="xmi_generic-xmi-based-uml-model-transformations" class="entry">
+  <td>Kovse J and Härder T (2002), <i>"Generic XMI-Based UML Model Transformations"</i>, In Proceedings 8th of International Conference on Object-Oriented Information Systems OOIS'02. , pp. 192-198. Springer-Verlag.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('xmi_generic-xmi-based-uml-model-transformations','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_xmi_generic-xmi-based-uml-model-transformations" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@inproceedings{xmi_generic-xmi-based-uml-model-transformations,
+  author = {Jernej Kovse and Theo Härder},
+  title = {Generic XMI-Based UML Model Transformations},
+  booktitle = {Proceedings 8th of International Conference on Object-Oriented Information Systems OOIS'02},
+  publisher = {Springer-Verlag},
+  year = {2002},
+  pages = {192--198}
+}
+</pre></td>
+</tr>
+<tr id="uml_uml2-semantics-and-applications" class="entry">
+  <td>Lano K (2009), <i>"UML 2 Semantics and Applications"</i>  Wiley.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_uml2-semantics-and-applications','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_uml2-semantics-and-applications" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{uml_uml2-semantics-and-applications,
+  author = {Kevin Lano},
+  title = {UML 2 Semantics and Applications},
+  publisher = {Wiley},
+  year = {2009}
+}
+</pre></td>
+</tr>
+<tr id="correctness_inter-association-constraints-in-uml2" class="entry">
+  <td>Maraee A and Balaban M (), <i>"Inter-association Constraints in UML2: Comparative Analysis, Usage Recommendations, and Modeling Guidelines"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_inter-association-constraints-in-uml2','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_inter-association-constraints-in-uml2" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_inter-association-constraints-in-uml2,
+  author = {Azzam Maraee and Mira Balaban},
+  title = {Inter-association Constraints in UML2: Comparative Analysis, Usage Recommendations, and Modeling Guidelines}
+}
+</pre></td>
+</tr>
+<tr id="correctness-simplification-and-correctness-of-uml-class-diagrams" class="entry">
+  <td>Maraee A and Balaban M (), <i>"Simplification and Correctness of UML Class Diagrams -- Focusing on Multiplicity and Aggregation/Composition Constraints"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness-simplification-and-correctness-of-uml-class-diagrams','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness-simplification-and-correctness-of-uml-class-diagrams" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness-simplification-and-correctness-of-uml-class-diagrams,
+  author = {Azzam Maraee and Mira Balaban},
+  title = {Simplification and Correctness of UML Class Diagrams -- Focusing on Multiplicity and Aggregation/Composition Constraints}
+}
+</pre></td>
+</tr>
+<tr id="correctness-model-correctness-patterns-as-an-educational-instrument" class="entry">
+  <td>Maraee A, Balaban M and Sturm A (2011), <i>"Model Correctness Patterns as an Educational Instrument"</i>, In EduSymp2011.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness-model-correctness-patterns-as-an-educational-instrument','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness-model-correctness-patterns-as-an-educational-instrument" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness-model-correctness-patterns-as-an-educational-instrument,
+  author = {Azzam Maraee and Mira Balaban and Arnon Sturm},
+  title = {Model Correctness Patterns as an Educational Instrument},
+  booktitle = {EduSymp2011},
+  year = {2011}
+}
+</pre></td>
+</tr>
+<tr id="correctness_class-diagram-semantics" class="entry">
+  <td>Maree A and Ashrov A (2014), <i>"Class Diagram - Semantics"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_class-diagram-semantics','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_class-diagram-semantics" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_class-diagram-semantics,
+  author = {Azzam Maree and Adiel Ashrov},
+  title = {Class Diagram - Semantics},
+  year = {2014}
+}
+</pre></td>
+</tr>
+<tr id="correctness_class-diagram-syntax-and-semantics" class="entry">
+  <td>Maree A and Ashrov A (2013), <i>"Class Diagram - Syntax and Semantics"</i>
+    <p class="infolinks"> [<a href="javascript:toggleInfo('correctness_class-diagram-syntax-and-semantics','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_correctness_class-diagram-syntax-and-semantics" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{correctness_class-diagram-syntax-and-semantics,
+  author = {Azzam Maree and Adiel Ashrov},
+  title = {Class Diagram - Syntax and Semantics},
+  year = {2013}
+}
+</pre></td>
+</tr>
+<tr id="testing_testng-beginners-guide" class="entry">
+  <td>Menon V (2013), <i>"TestNG Beginner's Guide"</i>  Packt Publishing.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('testing_testng-beginners-guide','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_testing_testng-beginners-guide" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{testing_testng-beginners-guide,
+  author = {Varun Menon},
+  title = {TestNG Beginner's Guide},
+  publisher = {Packt Publishing},
+  year = {2013}
+}
+</pre></td>
+</tr>
+<tr id="eclipse_introduction-to-the-eclipse-modeling-framework" class="entry">
+  <td>Merks E (2008), <i>"Introduction to the Eclipse Modeling Framework"</i>, \url{http://mdsd08.techjava.de/emftutorial31.pdf}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('eclipse_introduction-to-the-eclipse-modeling-framework','bibtex')">BibTeX</a>] [<a href="http://mdsd08.techjava.de/emftutorial31.pdf" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_eclipse_introduction-to-the-eclipse-modeling-framework" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{eclipse_introduction-to-the-eclipse-modeling-framework,
+  author = {Ed Merks},
+  title = {Introduction to the Eclipse Modeling Framework},
+  howpublished = {\url{http://mdsd08.techjava.de/emftutorial31.pdf}},
+  year = {2008},
+  note = {(accessed May 1, 2014)},
+  url = {http://mdsd08.techjava.de/emftutorial31.pdf}
+}
+</pre></td>
+</tr>
+<tr id="uml_learning_uml2" class="entry">
+  <td>Miles R and Hamilton K (2006), <i>"Learning UML 2.0"</i>  O'Reilly Media.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_learning_uml2','review')">Review</a>]  [<a href="javascript:toggleInfo('uml_learning_uml2','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/ISBN 978-0-596-00982-3" target="_blank">DOI</a>] [<a href="http://my.safaribooksonline.com/0596009828" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="rev_uml_learning_uml2" class="review noshow">
+  <td><b>Review</b>: "Since its original introduction in 1997, the Unified Modeling Language has revolutionized software development. Every integrated software development environment in the world--open-source, standards-based, and proprietary--now supports UML and, more importantly, the model-driven approach to software development. This makes learning the newest UML standard, UML 2.0, critical for all software developers--and there isn't a better choice than this clear, step-by-step guide to learning the language." --Richard Mark Soley, Chairman and CEO, OMG<br>If you're like most software developers, you're building systems that are increasingly complex. Whether you're creating a desktop application or an enterprise system, complexity is the big hairy monster you must manage.<br>The Unified Modeling Language (UML) helps you manage this complexity. Whether you're looking to use UML as a blueprint language, a sketch tool, or as a programming language, this book will give you the need-to-know information on how to apply UML to your project. While there are plenty of books available that describe UML, Learning UML 2.0 will show you how to use it. Topics covered include:<br> Capturing your system's requirements in your model to help you ensure that your designs meet your users' needs<br> Modeling the parts of your system and their relationships<br> Modeling how the parts of your system work together to meet your system's requirements<br> Modeling how your system moves into the real world, capturing how your system will be deployed<br>Engaging and accessible, this book shows you how to use UML to craft and communicate your project's design. Russ Miles and Kim Hamilton have written a pragmatic introduction to UML based on hard-earned practice, not theory. Regardless of the software process or methodology you use, this book is the one source you need to get up and running with UML 2.0. Additional information including exercises can be found at www.learninguml2.com.<br>Russ Miles is a software engineer for General Dynamics UK, where he works with Java and Distributed Systems, although his passion at the moment is Aspect Orientation and, in particular, AspectJ. Kim Hamilton is a senior software engineer at Northrop Grumman, where she's designed and implemented a variety of systems including web applications and distributed systems, with frequent detours into algorithms development.</td>
+</tr>
+<tr id="bib_uml_learning_uml2" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{uml_learning_uml2,
+  author = {Russell Miles and Kim Hamilton},
+  title = {Learning UML 2.0},
+  publisher = {O'Reilly Media},
+  year = {2006},
+  url = {http://my.safaribooksonline.com/0596009828},
+  doi = {ISBN 978-0-596-00982-3}
+}
+</pre></td>
+</tr>
+<tr id="testing_art-of-software-testing" class="entry">
+  <td>Myers G, Sandler C and Badgett T (2012), <i>"The Art of Software Testing"</i>  Wiley.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('testing_art-of-software-testing','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/ISBN: 978-1-118-03196-4c" target="_blank">DOI</a>]</p>
+  </td>
+</tr>
+<tr id="bib_testing_art-of-software-testing" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{testing_art-of-software-testing,
+  author = {Glenford Myers and Corey Sandler and Tom Badgett},
+  title = {The Art of Software Testing},
+  publisher = {Wiley},
+  year = {2012},
+  edition = {Third},
+  doi = {ISBN: 978-1-118-03196-4c}
+}
+</pre></td>
+</tr>
+<tr id="technologies_postgresql_up-and-running" class="entry">
+  <td>Obe R and Hsu L (2012), <i>"PostgreSQL: Up and Running"</i>  O'Reilly Media.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('technologies_postgresql_up-and-running','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_technologies_postgresql_up-and-running" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{technologies_postgresql_up-and-running,
+  author = {Regina Obe and Leonard Hsu},
+  title = {PostgreSQL: Up and Running},
+  publisher = {O'Reilly Media},
+  year = {2012}
+}
+</pre></td>
+</tr>
+<tr id="dd_standard" class="entry">
+  <td>Object Management Group (), <i>"Diagram Definition Standard"</i>, \url{http://www.omg.org/spec/DD/1.0/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('dd_standard','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/spec/DD/1.0/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_dd_standard" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{dd_standard,
+  author = {Object Management Group},
+  title = {Diagram Definition Standard},
+  howpublished = {\url{http://www.omg.org/spec/DD/1.0/}},
+  note = {(accessed March 10, 2014)},
+  url = {http://www.omg.org/spec/DD/1.0/}
+}
+</pre></td>
+</tr>
+<tr id="mof_standard" class="entry">
+  <td>Object Management Group (2014), <i>"Meta-Object Facility Standard"</i>, \url{http://www.omg.org/mof/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('mof_standard','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/mof/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_mof_standard" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{mof_standard,
+  author = {Object Management Group},
+  title = {Meta-Object Facility Standard},
+  howpublished = {\url{http://www.omg.org/mof/}},
+  year = {2014},
+  note = {(accessed March 11, 2014)},
+  url = {http://www.omg.org/mof/}
+}
+</pre></td>
+</tr>
+<tr id="uml_omg_about" class="entry">
+  <td>Object Management Group (2013), <i>"About the Object Management Group"</i>, \url{http://www.omg.org/gettingstarted/gettingstartedindex.htm}. August, 2013.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_omg_about','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/gettingstarted/gettingstartedindex.htm" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_omg_about" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{uml_omg_about,
+  author = {Object Management Group},
+  title = {About the Object Management Group},
+  howpublished = {\url{http://www.omg.org/gettingstarted/gettingstartedindex.htm}},
+  year = {2013},
+  note = {(accessed March 15, 2014)},
+  url = {http://www.omg.org/gettingstarted/gettingstartedindex.htm}
+}
+</pre></td>
+</tr>
+<tr id="omg_uml-revision-task-force" class="entry">
+  <td>Object Management Group (2011), <i>"UML Revision Task Force"</i>, \url{http://www.omgwiki.org/uml2-rtf/doku.php?id=start}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('omg_uml-revision-task-force','bibtex')">BibTeX</a>] [<a href="http://www.omgwiki.org/uml2-rtf/doku.php?id=start" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_omg_uml-revision-task-force" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{omg_uml-revision-task-force,
+  author = {Object Management Group},
+  title = {UML Revision Task Force},
+  howpublished = {\url{http://www.omgwiki.org/uml2-rtf/doku.php?id=start}},
+  year = {2011},
+  note = {(accessed May 2, 2014)},
+  url = {http://www.omgwiki.org/uml2-rtf/doku.php?id=start}
+}
+</pre></td>
+</tr>
+<tr id="qvt_standard" class="entry">
+  <td>Object Management Group (2011), <i>"Meta Object Facility Query/View/Transformation"</i>, \url{http://www.omg.org/spec/QVT}. August, 2011.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('qvt_standard','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/spec/XMI/2.4.1/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_qvt_standard" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{qvt_standard,
+  author = {Object Management Group},
+  title = {Meta Object Facility Query/View/Transformation},
+  howpublished = {\url{http://www.omg.org/spec/QVT}},
+  year = {2011},
+  note = {(accessed March 21, 2014)},
+  url = {http://www.omg.org/spec/XMI/2.4.1/}
+}
+</pre></td>
+</tr>
+<tr id="uml_uml_standard" class="entry">
+  <td>Object Management Group (2011), <i>"Unified Modeling Language™ Standard"</i>, \url{http://www.omg.org/spec/UML/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_uml_standard','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/spec/UML/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_uml_standard" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{uml_uml_standard,
+  author = {Object Management Group},
+  title = {Unified Modeling Language™ Standard},
+  howpublished = {\url{http://www.omg.org/spec/UML/}},
+  year = {2011},
+  note = {(accessed January 5, 2014)},
+  url = {http://www.omg.org/spec/UML/}
+}
+</pre></td>
+</tr>
+<tr id="uml_xmi_standard" class="entry">
+  <td>Object Management Group (2011), <i>"XML Metadata Interchange"</i>, \url{http://www.omg.org/spec/UML/}. August, 2011.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_xmi_standard','bibtex')">BibTeX</a>] [<a href="http://www.omg.org/spec/XMI/2.4.1/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_xmi_standard" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{uml_xmi_standard,
+  author = {Object Management Group},
+  title = {XML Metadata Interchange},
+  howpublished = {\url{http://www.omg.org/spec/UML/}},
+  year = {2011},
+  note = {(accessed February 5, 2014)},
+  url = {http://www.omg.org/spec/XMI/2.4.1/}
+}
+</pre></td>
+</tr>
+<tr id="evaluation_evaluation-of-accurancy-in-design-pattern-occuirence-detection" class="entry">
+  <td>Pettersson N, Lowe W and Nivre J (2010), <i>"Evaluation of Accuracy in Design Pattern Occurrence Detection"</i>, IEEE Transactions on Software Engineering. Los Alamitos, CA, USA  Vol. 36(4), pp. 575-590. IEEE Computer Society.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('evaluation_evaluation-of-accurancy-in-design-pattern-occuirence-detection','bibtex')">BibTeX</a>] [<a href="http://doi.ieeecomputersociety.org/10.1109/TSE.2009.92" target="_blank">DOI</a>]</p>
+  </td>
+</tr>
+<tr id="bib_evaluation_evaluation-of-accurancy-in-design-pattern-occuirence-detection" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{evaluation_evaluation-of-accurancy-in-design-pattern-occuirence-detection,
+  author = {Niklas Pettersson and Welf Lowe and Joakim Nivre},
+  title = {Evaluation of Accuracy in Design Pattern Occurrence Detection},
+  journal = {IEEE Transactions on Software Engineering},
+  publisher = {IEEE Computer Society},
+  year = {2010},
+  volume = {36},
+  number = {4},
+  pages = {575-590},
+  doi = {10.1109/TSE.2009.92}
+}
+</pre></td>
+</tr>
+<tr id="uml_uml2-in-a-nutshell" class="entry">
+  <td>Pilone D (2005), <i>"UML 2.0 in a Nutshell"</i>  O'Reilly.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('uml_uml2-in-a-nutshell','bibtex')">BibTeX</a>]</p>
+  </td>
+</tr>
+<tr id="bib_uml_uml2-in-a-nutshell" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@book{uml_uml2-in-a-nutshell,
+  author = {Dan Pilone},
+  title = {UML 2.0 in a Nutshell},
+  publisher = {O'Reilly},
+  year = {2005}
+}
+</pre></td>
+</tr>
+<tr id="ocl_semantics-specified-with-qvt" class="entry">
+  <td>Slaviša Marković and Thomas Baar (2008), <i>"Semantics of OCL specified with QVT"</i>, Software &amp; Systems Modeling.  Vol. 7(4), pp. 399-422. Springer-Verlag.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('ocl_semantics-specified-with-qvt','bibtex')">BibTeX</a>] [<a href="http://dx.doi.org/10.1007/s10270-008-0083-2" target="_blank">DOI</a>] [<a href="http://dx.doi.org/10.1007/s10270-008-0083-2" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_ocl_semantics-specified-with-qvt" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@article{ocl_semantics-specified-with-qvt,
+  author = {Slaviša Marković and Thomas Baar},
+  title = {Semantics of OCL specified with QVT},
+  journal = {Software &amp; Systems Modeling},
+  publisher = {Springer-Verlag},
+  year = {2008},
+  volume = {7},
+  number = {4},
+  pages = {399-422},
+  url = {http://dx.doi.org/10.1007/s10270-008-0083-2},
+  doi = {10.1007/s10270-008-0083-2}
+}
+</pre></td>
+</tr>
+<tr id="eclipse_site" class="entry">
+  <td>The Eclipse Foundation (2014), <i>"Eclipse Modeling Framework Project EMF"</i>, \url{http://www.eclipse.org/modeling/emf/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('eclipse_site','bibtex')">BibTeX</a>] [<a href="http://www.eclipse.org/modeling/emf/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_eclipse_site" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{eclipse_site,
+  author = {The Eclipse Foundation},
+  title = {Eclipse Modeling Framework Project EMF},
+  howpublished = {\url{http://www.eclipse.org/modeling/emf/}},
+  year = {2014},
+  note = {(accessed May 2, 2014)},
+  url = {http://www.eclipse.org/modeling/emf/}
+}
+</pre></td>
+</tr>
+<tr id="visual-paradigm_features" class="entry">
+  <td>Visual Paradigm (), <i>"Features"</i>, \url{http://www.visual-paradigm.com/features/miscellaneous/}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('visual-paradigm_features','bibtex')">BibTeX</a>] [<a href="http://www.visual-paradigm.com/features/miscellaneous/" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_visual-paradigm_features" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{visual-paradigm_features,
+  author = {Visual Paradigm},
+  title = {Features},
+  howpublished = {\url{http://www.visual-paradigm.com/features/miscellaneous/}},
+  note = {(accessed December 21, 2013)},
+  url = {http://www.visual-paradigm.com/features/miscellaneous/}
+}
+</pre></td>
+</tr>
+<tr id="visual-paradigm_model-quality-checker" class="entry">
+  <td>Visual Paradigm (), <i>"Model Quality Checker"</i>, \url{http://www.visual-paradigm.com/product/vpuml/tutorials/modelquality.jsp}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('visual-paradigm_model-quality-checker','bibtex')">BibTeX</a>] [<a href="http://www.visual-paradigm.com/product/vpuml/tutorials/modelquality.jsp" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_visual-paradigm_model-quality-checker" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{visual-paradigm_model-quality-checker,
+  author = {Visual Paradigm},
+  title = {Model Quality Checker},
+  howpublished = {\url{http://www.visual-paradigm.com/product/vpuml/tutorials/modelquality.jsp}},
+  note = {(accessed December 19, 2013)},
+  url = {http://www.visual-paradigm.com/product/vpuml/tutorials/modelquality.jsp}
+}
+</pre></td>
+</tr>
+<tr id="visual-paradigm_plugin-development" class="entry">
+  <td>Visual Paradigm (), <i>"Plug-in Development"</i>, \url{http://www.visual-paradigm.com/product/vpuml/tutorials/plugin.jsp}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('visual-paradigm_plugin-development','bibtex')">BibTeX</a>] [<a href="http://www.visual-paradigm.com/product/vpuml/tutorials/plugin.jsp" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_visual-paradigm_plugin-development" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{visual-paradigm_plugin-development,
+  author = {Visual Paradigm},
+  title = {Plug-in Development},
+  howpublished = {\url{http://www.visual-paradigm.com/product/vpuml/tutorials/plugin.jsp}},
+  note = {(accessed December 17, 2013)},
+  url = {http://www.visual-paradigm.com/product/vpuml/tutorials/plugin.jsp}
+}
+</pre></td>
+</tr>
+<tr id="visual-paradigm_users-guide" class="entry">
+  <td>Visual Paradigm (), <i>"User's Guide"</i>, \url{http://www.visual-paradigm.com/support/documents/vpuserguide.jsp}.
+    <p class="infolinks"> [<a href="javascript:toggleInfo('visual-paradigm_users-guide','bibtex')">BibTeX</a>] [<a href="http://www.visual-paradigm.com/support/documents/vpuserguide.jsp" target="_blank">URL</a>]</p>
+  </td>
+</tr>
+<tr id="bib_visual-paradigm_users-guide" class="bibtex noshow">
+  <td><b>BibTeX</b>:
+<pre>
+@misc{visual-paradigm_users-guide,
+  author = {Visual Paradigm},
+  title = {User's Guide},
+  howpublished = {\url{http://www.visual-paradigm.com/support/documents/vpuserguide.jsp}},
+  note = {(accessed December 15, 2013)},
+  url = {http://www.visual-paradigm.com/support/documents/vpuserguide.jsp}
+}
+</pre></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<div id="footer">
+  <p>
+    &copy; 2014 Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz
+  </p>
+  <div id="df-copyright">
+  </div>
+</div>
+
+</body>
+</html>
