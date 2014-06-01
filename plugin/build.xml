@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="plugin" default="all">
+
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.debug.core.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.debug.core.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.debug.ui.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.debug.ui.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.examples_1.0.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.help_1.2.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.plugin_1.4.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.product_1.6.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.qvt.ui_1.2.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.util.core.plugin_1.2.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.util.eclipse.nls_1.2.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar"/>
+  </path>
+  
+  <path id="library.de.ikv.medini.util.eclipse_1.2.0.25263.classpath">
+    <pathelement location="${basedir}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar"/>
+  </path>
+  
+  <path id="library.openapi.classpath">
+    <pathelement location="${basedir}/lib/openapi.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.core.expressions_3.4.200.v20100505.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.core.runtime_3.6.0.v20100505.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.core.variables_3.2.400.v20100505.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.common_2.4.0.v200808251517.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.ecore_2.4.1.v200808251517.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.edit_2.6.0.v20100914-1218.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.transaction_1.4.0.v20100331-1738.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.emf.validation_1.4.0.v20100428-2315.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.equinox.common_3.6.0.v20100503.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.equinox.registry_3.5.0.v20100503.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.osgi_3.6.1.r36x_v20100806.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar"/>
+  </path>
+  
+  <path id="library.org.eclipse.uml2.uml_2.2.0.v200805141133.classpath">
+    <pathelement location="${basedir}/lib/org.eclipse.uml2.uml_2.2.0.v200805141133.jar"/>
+  </path>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module plugin -->
+  
+  <dirname property="module.plugin.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.plugin" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="plugin.output.dir" value="${module.plugin.basedir}/build/production/plugin"/>
+  <property name="plugin.testoutput.dir" value="${module.plugin.basedir}/build/test/plugin"/>
+  
+  <path id="plugin.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="plugin.module.production.classpath">
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.core.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.ui.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.examples_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.help_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.plugin_1.4.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.product_1.6.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.ui_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.core.plugin_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse.nls_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse_1.2.0.25263.classpath"/>
+    <path refid="library.openapi.classpath"/>
+    <path refid="library.org.eclipse.core.expressions_3.4.200.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.runtime_3.6.0.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.variables_3.2.400.v20100505.classpath"/>
+    <path refid="library.org.eclipse.emf.common_2.4.0.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.edit_2.6.0.v20100914-1218.classpath"/>
+    <path refid="library.org.eclipse.emf.transaction_1.4.0.v20100331-1738.classpath"/>
+    <path refid="library.org.eclipse.emf.validation_1.4.0.v20100428-2315.classpath"/>
+    <path refid="library.org.eclipse.equinox.common_3.6.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.equinox.registry_3.5.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.osgi_3.6.1.r36x_v20100806.classpath"/>
+    <path refid="library.org.eclipse.uml2.uml_2.2.0.v200805141133.classpath"/>
+  </path>
+  
+  <path id="plugin.runtime.production.module.classpath">
+    <pathelement location="${plugin.output.dir}"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.core.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.ui.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.examples_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.help_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.plugin_1.4.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.product_1.6.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.ui_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.core.plugin_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse.nls_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse_1.2.0.25263.classpath"/>
+    <path refid="library.openapi.classpath"/>
+    <path refid="library.org.eclipse.core.expressions_3.4.200.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.runtime_3.6.0.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.variables_3.2.400.v20100505.classpath"/>
+    <path refid="library.org.eclipse.emf.common_2.4.0.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.edit_2.6.0.v20100914-1218.classpath"/>
+    <path refid="library.org.eclipse.emf.transaction_1.4.0.v20100331-1738.classpath"/>
+    <path refid="library.org.eclipse.emf.validation_1.4.0.v20100428-2315.classpath"/>
+    <path refid="library.org.eclipse.equinox.common_3.6.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.equinox.registry_3.5.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.osgi_3.6.1.r36x_v20100806.classpath"/>
+    <path refid="library.org.eclipse.uml2.uml_2.2.0.v200805141133.classpath"/>
+  </path>
+  
+  <path id="plugin.module.classpath">
+    <pathelement location="${plugin.output.dir}"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.core.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.ui.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.examples_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.help_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.plugin_1.4.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.product_1.6.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.ui_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.core.plugin_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse.nls_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse_1.2.0.25263.classpath"/>
+    <path refid="library.openapi.classpath"/>
+    <path refid="library.org.eclipse.core.expressions_3.4.200.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.runtime_3.6.0.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.variables_3.2.400.v20100505.classpath"/>
+    <path refid="library.org.eclipse.emf.common_2.4.0.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.edit_2.6.0.v20100914-1218.classpath"/>
+    <path refid="library.org.eclipse.emf.transaction_1.4.0.v20100331-1738.classpath"/>
+    <path refid="library.org.eclipse.emf.validation_1.4.0.v20100428-2315.classpath"/>
+    <path refid="library.org.eclipse.equinox.common_3.6.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.equinox.registry_3.5.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.osgi_3.6.1.r36x_v20100806.classpath"/>
+    <path refid="library.org.eclipse.uml2.uml_2.2.0.v200805141133.classpath"/>
+  </path>
+  
+  <path id="plugin.runtime.module.classpath">
+    <pathelement location="${plugin.testoutput.dir}"/>
+    <pathelement location="${plugin.output.dir}"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.core.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.debug.ui.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.examples_1.0.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.help_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.plugin_1.4.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.product_1.6.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.qvt.ui_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.core.plugin_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse.nls_1.2.0.25263.classpath"/>
+    <path refid="library.de.ikv.medini.util.eclipse_1.2.0.25263.classpath"/>
+    <path refid="library.openapi.classpath"/>
+    <path refid="library.org.eclipse.core.expressions_3.4.200.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.runtime_3.6.0.v20100505.classpath"/>
+    <path refid="library.org.eclipse.core.variables_3.2.400.v20100505.classpath"/>
+    <path refid="library.org.eclipse.emf.common_2.4.0.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.ecore_2.4.1.v200808251517.classpath"/>
+    <path refid="library.org.eclipse.emf.edit_2.6.0.v20100914-1218.classpath"/>
+    <path refid="library.org.eclipse.emf.transaction_1.4.0.v20100331-1738.classpath"/>
+    <path refid="library.org.eclipse.emf.validation_1.4.0.v20100428-2315.classpath"/>
+    <path refid="library.org.eclipse.equinox.common_3.6.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.equinox.registry_3.5.0.v20100503.classpath"/>
+    <path refid="library.org.eclipse.osgi_3.6.1.r36x_v20100806.classpath"/>
+    <path refid="library.org.eclipse.uml2.uml_2.2.0.v200805141133.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.plugin">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.plugin">
+    <patternset refid="excluded.from.module.plugin"/>
+  </patternset>
+  
+  <path id="plugin.module.sourcepath">
+    <dirset dir="${module.plugin.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.plugin" depends="compile.module.plugin.production,compile.module.plugin.tests" description="Compile module plugin"/>
+  
+  <target name="compile.module.plugin.production" description="Compile module plugin; production classes">
+    <mkdir dir="${plugin.output.dir}"/>
+    <javac destdir="${plugin.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.plugin}"/>
+      <bootclasspath refid="plugin.module.bootclasspath"/>
+      <classpath refid="plugin.module.production.classpath"/>
+      <src refid="plugin.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.plugin"/>
+    </javac>
+    
+    <copy todir="${plugin.output.dir}">
+      <fileset dir="${module.plugin.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.plugin.tests" depends="compile.module.plugin.production" description="compile module plugin; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.plugin" description="cleanup module">
+    <delete dir="${plugin.output.dir}"/>
+    <delete dir="${plugin.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.plugin, clean.artifact.plugin" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.plugin" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.plugin" value="${basedir}/build/net.umllint.plugin.vp"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="clean.artifact.plugin" description="clean plugin artifact output">
+    <delete dir="${artifact.output.plugin}"/>
+  </target>
+  
+  <target name="artifact.plugin" depends="init.artifacts, compile.module.plugin" description="Build &#39;plugin&#39; artifact">
+    <mkdir dir="${artifact.output.plugin}"/>
+    <mkdir dir="${artifact.output.plugin}/classes"/>
+    <copy todir="${artifact.output.plugin}/classes">
+      <fileset dir="${plugin.output.dir}"/>
+    </copy>
+    <mkdir dir="${artifact.output.plugin}/resources"/>
+    <copy file="${basedir}/resources/umllint.ecore" tofile="${artifact.output.plugin}/resources/umllint.ecore"/>
+    <copy file="${basedir}/resources/uml.ecore" tofile="${artifact.output.plugin}/resources/uml.ecore"/>
+    <copy file="${basedir}/resources/library.qvt" tofile="${artifact.output.plugin}/resources/library.qvt"/>
+    <copy file="${basedir}/resources/patterns.xml" tofile="${artifact.output.plugin}/resources/patterns.xml"/>
+    <mkdir dir="${artifact.output.plugin}/lib"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.core.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.debug.core.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.debug.ui.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.debug.ui.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.help_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.product_1.6.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar" tofile="${artifact.output.plugin}/lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.core.expressions_3.4.200.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.core.variables_3.2.400.v20100505.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.common_2.4.0.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar"/>
+    <copy file="${basedir}/lib/org.eclipse.uml2.uml_2.2.0.v200805141133.jar" tofile="${artifact.output.plugin}/lib/org.eclipse.uml2.uml_2.2.0.v200805141133.jar"/>
+    <copy file="${basedir}/resources/plugin.xml" tofile="${artifact.output.plugin}/plugin.xml"/>
+    <copy file="${basedir}/resources/plugin.properties" tofile="${artifact.output.plugin}/plugin.properties"/>
+    <mkdir dir="${artifact.output.plugin}/workspace"/>
+    <copy file="${basedir}/umllint.properties" tofile="${artifact.output.plugin}/umllint.properties"/>
+    <mkdir dir="${artifact.output.plugin}/icons"/>
+    <copy todir="${artifact.output.plugin}/icons">
+      <fileset dir="${basedir}/resources/icons"/>
+    </copy>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.plugin" description="Build all artifacts">
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

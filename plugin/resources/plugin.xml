@@ -1,0 +1,94 @@
+<plugin
+        id="%plugin.id"
+        name="%plugin.name"
+        description="%plugin.description"
+        provider="Visual Paradigm"
+        class="%plugin.class"
+        >
+    <runtime>
+        <library path="classes" relativePath="true"/>
+        <library path="lib/de.ikv.medini.metamodel.xsd2ecoreutil.edit_1.0.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.metamodel.xsd2ecoreutil.editor_1.0.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.metamodel.xsd2ecoreutil_1.0.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.debug.core.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.debug.ui.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.examples_1.0.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.help_1.2.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.plugin_1.4.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.product_1.6.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.qvt.ui_1.2.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.util.core.plugin_1.2.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.util.eclipse.nls_1.2.0.25263.jar" relativePath="true"/>
+        <library path="lib/de.ikv.medini.util.eclipse_1.2.0.25263.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.core.expressions_3.4.200.v20100505.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.core.runtime_3.6.0.v20100505.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.core.variables_3.2.400.v20100505.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.common_2.4.0.v200808251517.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.ecore.change_2.5.1.v20100907-1643.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.ecore_2.4.1.v200808251517.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.emf.validation_1.4.0.v20100428-2315.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.equinox.common_3.6.0.v20100503.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.equinox.registry_3.5.0.v20100503.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.osgi_3.6.1.R36x_v20100806.jar" relativePath="true"/>
+        <library path="lib/org.eclipse.uml2.uml_2.2.0.v200805141133.jar" relativePath="true"/>
+    </runtime>
+    <actionSets>
+        <actionSet id="net.umllint.plugin.vp">
+            <menu
+                    id="net.umllint.plugin.vp.menu"
+                    label="UMLLint"
+                    mnemonic="L"
+                    menuPath=""/>
+            <toolbar
+                    id="net.umllint.plugin.vp.toolbar"
+                    orientation="north"
+                    index="last"/>
+            <action
+                    id="net.umllint.plugin.vp.actions.homepage.HomepageAction"
+                    actionType="generalAction"
+                    label="Homepage"
+                    tooltip="Opens UMLLint Homepage."
+                    style="normal"
+                    menuPath="net.umllint.plugin.vp.menu/#"
+                    icon="icons/homepage.gif">
+                <actionController class="net.umllint.plugin.vp.actions.homepage.HomepageActionController"/>
+            </action>
+            <action
+                    id="net.umllint.plugin.vp.actions.database.DatabaseAction"
+                    actionType="generalAction"
+                    label="Database"
+                    tooltip="List patterns in database."
+                    style="normal"
+                    menuPath="net.umllint.plugin.vp.menu/#"
+                    toolbarPath="net.umllint.plugin.vp.toolbar/#"
+                    icon="icons/database.gif">
+                <actionController class="net.umllint.plugin.vp.actions.database.DatabaseActionController"/>
+            </action>
+            <action
+                    id="net.umllint.plugin.vp.actions.update.UpdateAction"
+                    actionType="generalAction"
+                    label="Update"
+                    tooltip="Update the pattern database"
+                    style="normal"
+                    menuPath="net.umllint.plugin.vp.menu/#"
+                    toolbarPath="net.umllint.plugin.vp.toolbar/#"
+                    icon="icons/update.gif">
+                <actionController class="net.umllint.plugin.vp.actions.update.UpdateActionController"/>
+            </action>
+            <action
+                    id="net.umllint.plugin.vp.actions.analyze.AnalyzeAction"
+                    actionType="generalAction"
+                    label="Analyze"
+                    tooltip="Analyze the UML correctness"
+                    style="normal"
+                    menuPath="net.umllint.plugin.vp.menu/#"
+                    toolbarPath="net.umllint.plugin.vp.toolbar/#"
+                    icon="icons/analyze.gif">
+                <actionController class="net.umllint.plugin.vp.actions.analyze.AnalyzeActionController"/>
+            </action>
+        </actionSet>
+    </actionSets>
+</plugin>
