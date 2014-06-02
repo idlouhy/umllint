@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>UMLLint</title>
+
+  <meta name="description" content="A Tool for Checking Correctness of Design Diagrams in UML"/>
+  <meta name="keywords" content="uml, xmi, umllint, lint, qvt, patterns"/>
+  <meta name="author" content="Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz"/>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/vendor/reset.css"/>
+  <link rel="stylesheet" href="css/layout.css"/>
+
+</head>
+<body>
+
+<h1>UMLLint - Tutorial</h1>
+
+<div id="header">
+  <div id="menu">
+    <a href="index.html">Home</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="get.html">GET</a>
+    <a href="app/pattern/list">Patterns</a>
+    <a href="app/api/xml/patterns.xml">Export</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+
+<div id="content">
+
+  <h2>Table of Contents</h2>
+  <ul>
+    <li>
+      1. <a href="#installation">Installation</a>
+      <ul>
+        <li>1.1 <a href="#installation-github">GitHub</a></li>
+        <li>1.1 <a href="#installation-tool-source">Command Line Tool - Source</a></li>
+        <li>1.2 <a href="#installation-tool-binary">Command Line Tool - Binary</a></li>
+        <li>1.3 <a href="#installation-plugin-source">Visual Paradigm Plugin - Source</a></li>
+        <li>1.4 <a href="#installation-plugin-binary">Visual Paradigm Plugin - Binary</a></li>
+        <li>1.5 <a href="#installation">Server - Source</a></li>
+      </ul>
+    </li>
+    <li>2. <a href="#configuration">Configuration</a></li>
+    <li>3. <a href="#userguide">User Guide</a></li>
+    <ul>
+      <li>3.1 <a href="#userguide-tool">Command Line Tool</a></li>
+      <li>3.2 <a href="#userguide-plugin">Visual Paradigm Plugin</a></li>
+    </ul>
+  </ul>
+  </p>
+
+
+  <h2 id="installation">Installation</h2>
+
+  <h3 id="installation-github">Github</h3>
+  The UMLLint project is hosted on GitHub, you can reach it at <a href="https://github.com/idlouhy/umllint">https://github.com/idlouhy/umllint</a>.
+  Feel free to download the source code or submit issues!
+
+  <h3 id="installation-tool-source">Command Line Tool - Source</h3>
+  <ul>
+    <li>1a. Download the source distribution from the <a href="get.html">GET</a> page</li>
+    <li>1b. Clone the source from <a href="https://github.com/idlouhy/umllint">GitHub</a></li>
+    <li>2. Unpack the archive. You should see the build.xml file in the root directory.</li>
+    <li>3. The Command Line Tool uses the Ant build system. Navigate to the source root and invoke Ant.</li>
+    <li>4. The built binary version is in the build subdirectory</li>
+    <li>5. Continue with the tutorial for the binary version.</li>
+  </ul>
+
+  <h3 id="installation-tool-binary">Command Line Tool - Binary</h3>
+  <ul>
+    <li>1. Download the binary distribution from the <a href="get.html">GET</a> page</li>
+    <li>2. Unpack the archive. You should see the file tool.jar and additional folders and configuration files.</li>
+    <li>3. Configure the tool using the umllint.properties file.</li>
+    <li>4. Run the tool: java -jar tool.jar</li>
+    <li>5. Continue with the usage tutorial.</li>
+  </ul>
+
+
+  <h3 id="installation-plugin-source">Visual Paradigm Plugin - Source</h3>
+  <ul>
+    <li>1a. Download the source distribution from the <a href="get.html">GET</a> page</li>
+    <li>1b. Clone the source from <a href="https://github.com/idlouhy/umllint">GitHub</a></li>
+    <li>2. Unpack the archive. You should see the build.xml file in the root directory.</li>
+    <li>3. The Visual Paradigm Plugin uses the Ant build system. Navigate to the source root and invoke Ant.</li>
+    <li>4. The built and prepared plugin package is in the build directory in the folder net.umllint.plugin.vp</li>
+    <li>5. Continue with the tutorial for the binary version.</li>
+  </ul>
+
+  <h3 id="installation-plugin-binary">Visual Paradigm Plugin - Binary</h3>
+  <ul>
+    <li>1. Download the source distribution from the <a href="get.html">GET</a> page</li>
+    <li>2. The built and prepared plugin package is in the directory net.umllint.plugin.vp</li>
+    <li>3. Locate your local Visual Paradigm Standard installation. Make sure there is a plugin directory in the root
+      directory of the installation
+    </li>
+    <li>4. Copy the plugin package net.umllint.plugin.vp directly to the plugin directory in your Visual Paradigm
+      installation.
+    </li>
+    <li>5. You may want to add permissions for your user account to write inside the plugin filder</li>
+    <li>6. Open the plugin package directory and configure the plugin in the umllint.properties file.</li>
+    <li>7. Start or restart your Visual Paradigm. New menu and toolbar icons should appear.</li>
+    <li>8. Continue with the usage tutorial.</li>
+  </ul>
+
+
+  <h3 id="installation-server-source">Server - Source</h3>
+  <ul>
+    <li>1a. Download the source distribution from the <a href="get.html">GET</a> page</li>
+    <li>1b. Clone the source from <a href="https://github.com/idlouhy/umllint">GitHub</a></li>
+    <li>2. Unpack the archive. You should see the build.gradle file in the root directory.</li>
+    <li>3. Navigate to the directory sql. Connect to your PostgreSQL database server. Execute the database, tables and
+      data SQL scripts.
+    </li>
+    <li>4. The Server component uses the Gradle build system. Invoke Gradle by calling ./gradlew (or gradle.bat) in the
+      root
+      directory.
+    </li>
+    <li>5. Navigate to the directory src/main/resources. Configure the connection to the database in the file
+      local.properties (for use on the Microsoft Windows workstation) or production.properties (used on the Linux
+      Server).
+    </li>
+    <li>6. Call ./gradlew war build the WAR package. The results are in the build/libs directory.
+    </li>
+    <li>7. Locate the file app.war and deploy it on your web server.</li>
+  </ul>
+
+  <h2 id="configuration">Configuration</h2>
+  This section explains the configuration options. The best is to leave the properties file untouched and use the
+  default configuration.
+  <ul>
+    <li><b>umllint.server</b>: The server URL. (default http://umllint.net/)</li>
+    <li><b>umllint.server.api</b>: The server API URL. (default http</b>://umllint.net/app/api)</li>
+    <li><b>umllint.file.input</b>: Input file for command line tool. (default /workspace/input.xmi)</li>
+    <!--<li><b>umllint.file.database</b>:-->
+    <li><b>umllint.file.workspace</b>: The temporary workspace directory - needs to be writable! (default /workspace)
+    </li>
+    <li><b>umllint.file.library</b>: The file with local QVT functionality. (default /resources/library.qvt)</li>
+    <li><b>umllint.file.model.uml</b>: The input UML meta-model in Ecore. (default /resources/uml.ecore)</li>
+    <li><b>umllint.file.model.umllint</b>: The output UMLLint meta-model in Ecore. (default /resources/umllint.ecore)
+    </li>
+    <li><b>umllint.file.patterns</b>: The pattern database file. (default /resources/patterns.xml)</li>
+    <li><b>umllint.debug.qvt</b>: The debug mode of QVT Engine - set true/false. (default true)</li>
+  </ul>
+
+  <h2 id="userguide">User Guide</h2>
+
+  <h3 id="userguide-tool">Command Line Tool</h3>
+
+  <p>The Command Line Tool is a terminal application and can be controlled using arguments. This section explains basic
+    use of the tool. You can display the tool with
+    the argument -h.</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -h</span></p>
+  <img src="screenshots/tool_help.png"/>
+
+  <p>The tool accepts XMI as a input. You can export the UML diagram as XMI from variety of tool. However the tool was
+    tested on Visual Paradigm and Eclipse Modeling. The input file can be set in the configuration file. You can set the
+    input file using the argument -i</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -i test/input.xmi</span></p>
+
+  <p>The tool uses a pattern database for UML correctness evaluation. You can list the currect local database contents
+    using the argument -l. The pattern is identified by the ID and has a category and severity. The list also contains a
+    link to the server that contains more information.</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -l</span></p>
+  <img src="screenshots/tool_pattern-list.png"/>
+
+  <p>You can print pattern details using the argument -p and the pattern ID.</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -p 6</span></p>
+  <img src="screenshots/tool_pattern-detail.png"/>
+
+  <p>To update the local pattern database from the server, call the tool with the argument -u. The tool connects to the
+    server, performs an update and prints the contents.</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -u</span></p>
+  <img src="screenshots/tool_update.png"/>
+
+  <p>Finally you can execute the correctness analysis by the argument -a. The results are printed into the console. The
+    column Binding contains the name of the element that has issues. You can view more information about the pattern by
+    the mentioned -p or -l arguments.</p>
+
+  <p><span class="code">$ java -jar umllint-tool.jar -a</span></p>
+  <img src="screenshots/tool_analyze.png"/>
+
+
+  <h3 id="userguide-plugin">Visual Paradigm Plugin</h3>
+
+  <p>
+    The functionality of the Visual Paradigm plugin is similar to the Command Line Tool. However it does not require the
+    input from the user, it uses the current Visual Paradigm model instead.
+  </p>
+
+  <p>The plugin integrates itself inside the Visual Paradigm user interface. All available functions are listed in the
+    main menu UMLLint. Some of the functions are available also on the toolbar.</p>
+  <img src="screenshots/plugin_menu.png"/>
+
+  <p>The Database action opens a dialog with the list of patterns available locally. The last column contains a link to
+    the web page that contains more information about the pattern.</p>
+  <img src="screenshots/plugin_pattern-list.png"/>
+
+  <p>You can double click on the view online link to open the pattern detail in another dialog. It sources the content
+    directly from the server, so internet connection is required.</p>
+  <img src="screenshots/plugin_pattern-detail.png"/>
+
+  <p>The analyze action will start the pattern correctness check. The results are displayed in a dialog window. The
+    column Binding displays an element reference to the diagram. Double clicking the element reference will highlight it
+    in the active diagram.</p>
+  <img src="screenshots/plugin_analyze.png"/>
+
+  <h2 id="conclusion">Conclusion</h2>
+  Having problems installing or running umllint? Please contact me on xdlouh05@stud.fit.vutbr.cz.
+  https://github.com/idlouhy/umllint/issues
+
+</div>
+<div id="footer">
+
+  <p>
+    &copy; 2014 Ivo Dlouhy, xdlouh05@stud.fit.vutbr.cz
+  </p>
+
+  <div id="df-copyright">
+  </div>
+</div>
+
+</body>
+</html>
+

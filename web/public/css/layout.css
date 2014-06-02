@@ -11,15 +11,24 @@ body {
 
 
 h1 {
-  font-size: 150%;
+  font-size: 160%;
   padding: 10px;
-
 }
 
 h2 {
+  font-size: 140%;
   padding-top: 10px;
   padding-bottom: 5px;
+}
 
+h3 {
+  font-size: 120%;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+ul {
+  padding-left: 15px;
 }
 
 p {
@@ -168,7 +177,11 @@ ul li span img {
 
 
 
+span.code {
+  font-family: "Consolas", "Courier New", Courier, Monospace;
+  white-space: pre;
 
+}
 
 
 
@@ -190,6 +203,7 @@ ul li span img {
 
 .umllint-pattern-description img {
   width: 480px;
+
 
 }
 
